@@ -38,7 +38,9 @@ class build_ext(_build_ext.build_ext):
             [
                 "patchelf",
                 "--set-rpath",
-                sysconfig.get_path("platlib"),
+                # this doesn't work with auditwheel, only sdist
+                #"{}:{}".format(sysconfig.get_path("platlib"), self.build_lib),
+                "$ORIGIN",  # XXX: security implications
                 str(Path(self.build_lib) / lib.name),
             ]
         )
