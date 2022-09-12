@@ -14,11 +14,17 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Set up QEMU
+        if: runner.os == 'Linux'
+        uses: docker/setup-qemu-action@v2
+        with:
+          platforms: all
+
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.9.0
-        # env:
-        #   CIBW_SOME_OPTION: value
-        #    ...
+        env:
+          CIBW_ARCHS_LINUX: auto aarch64 ppc64le
+          CIBW_SKIP: pp*
         # with:
         #   package-dir: .
         #   output-dir: wheelhouse
@@ -27,3 +33,37 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           path: ./wheelhouse/*.whl
+  build_sdist:
+    name: Build source distribution
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Build sdist
+        run: pipx run build --sdist
+
+      - uses: actions/upload-artifact@v3
+        with:
+          path: dist/*.tar.gz
+
+  upload_pypi:
+    needs: [build_wheels, build_sdist]
+    runs-on: ubuntu-20.04
+    # upload to PyPI on every tag starting with 'v'
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+    # alternatively, to publish when a GitHub Release is created, use the following rule:
+    # if: github.event_name == 'release' && github.event.action == 'published'
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          # unpacks default artifact into dist/
+          # if `name: artifact` is omitted, the action will create extra parent dir
+          name: artifact
+          path: dist
+
+      - uses: pypa/gh-action-pypi-publish@v1.5.0
+        with:
+          user: ${{ secrets.pypi_username }}
+          password: ${{ secrets.pypi_password }}
+          repository_url: https://test.pypi.org/legacy/
+
