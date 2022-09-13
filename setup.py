@@ -83,8 +83,9 @@ setup(
     author='Corey Minyard',
     author_email='cminyard@mvista.com>',
     description='a framework for giving a consistent view of various stream (and packet) I/O types',
-    long_description=readme,
-    long_description_content_type="text/x-rst",
+    # TODO: README.rst has invalid reStructuredText, so skip for now
+    #long_description=readme,
+    #long_description_content_type="text/x-rst",
     py_modules=["gensio"],
     package_dir={'': "swig/python"},
     cmdclass={'build_ext': build_ext},
