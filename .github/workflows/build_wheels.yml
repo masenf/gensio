@@ -25,7 +25,7 @@ jobs:
         env:
           # temporarily disable aarch64 because it's slow
           #CIBW_ARCHS_LINUX: auto aarch64
-          CIBW_SKIP: pp* *musllinux_aarch64
+          CIBW_SKIP: pp* *musllinux*
         # with:
         #   package-dir: .
         #   output-dir: wheelhouse
