@@ -45,52 +45,23 @@ class build_ext(_build_ext.build_ext):
             ]
         )
 
-    @contextmanager
-    def patch_autoconf(self):
-        """
-        skip autoconf check that it can link against libpython.
-
-        python extensions don't need to link against libpython and are not allowed
-        to in manylinux, so remove this check.
-        """
-        spawn(
-            [
-                "patch",
-                "--forward",
-                str(here / "m4" / "ax_python_devel.m4"),
-                str(skip_shared_object_link_check_patch),
-            ]
-        )
-        try:
-            yield
-        finally:
-            spawn(
-                [
-                    "patch",
-                    "--reverse",
-                    str(here / "m4" / "ax_python_devel.m4"),
-                    str(skip_shared_object_link_check_patch),
-                ]
-            )
-
     def run(self):
         if not self.extensions:
             return
         os.environ["PYTHON_VERSION"] = sysconfig.get_python_version()
-        with self.patch_autoconf():
-            configure = here / "configure"
-            if not configure.exists():
-                spawn([str(here / "reconf")])
-            spawn(
-                [
-                    str(configure),
-                    "--with-python",
-                    # normally this would be automatic... but explicitly override it
-                    # to avoid the `-lpythonX.Y` flag, which isn't supported by manylinux
-                    "PYTHON_LIBS={}".format(sysconfig.get_config_var("LIBDIR")),
-                ],
-            )
-            spawn(["make", "-C", str(here)])
+        configure = here / "configure"
+        if not configure.exists():
+            spawn([str(here / "reconf")])
+        spawn(
+            [
+                str(configure),
+                "--with-python",
+                # normally this would be automatic... but explicitly override it
+                # to avoid the `-lpythonX.Y` flag, which isn't supported by manylinux
+                "PYTHON_LIBS={}".format(sysconfig.get_config_var("LIBDIR")),
+            ],
+        )
+        spawn(["make", "-C", str(here)])
         mkpath(self.build_lib)
         for ext in self.extensions:
             for lib_dir in ext.depends or []:
