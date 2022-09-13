@@ -13,6 +13,7 @@ import sysconfig
 from setuptools import setup, Extension, find_packages
 from distutils.command import build_ext as _build_ext
 from distutils.dir_util import mkpath
+from distutils.errors import DistutilsExecError
 from distutils.file_util import copy_file
 from distutils.spawn import spawn
 
@@ -61,7 +62,12 @@ class build_ext(_build_ext.build_ext):
                 "PYTHON_LIBS={}".format(sysconfig.get_config_var("LIBDIR")),
             ],
         )
-        spawn(["make", "-C", str(here)])
+        try:
+            # remake the python module only, if possible
+            spawn(["make", "-C", str(here / "swig" / "python")])
+        except DistutilsExecError:
+            # make the whole package
+            spawn(["make", "-C", str(here)])
         mkpath(self.build_lib)
         for ext in self.extensions:
             for lib_dir in ext.depends or []:
@@ -73,7 +79,6 @@ class build_ext(_build_ext.build_ext):
 setup(
     name='gensio',
     use_scm_version=True,
-    setup_requires=['setuptools_scm'],
     url='https://github.com/cminyard/gensio',
     author='Corey Minyard',
     author_email='cminyard@mvista.com>',
