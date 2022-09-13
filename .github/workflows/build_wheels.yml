@@ -14,16 +14,17 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Set up QEMU
-        if: runner.os == 'Linux'
-        uses: docker/setup-qemu-action@v2
-        with:
-          platforms: all
+      #- name: Set up QEMU
+      #  if: runner.os == 'Linux'
+      #  uses: docker/setup-qemu-action@v2
+      #  with:
+      #    platforms: all
 
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.9.0
         env:
-          CIBW_ARCHS_LINUX: auto aarch64
+          # temporarily disable aarch64 because it's slow
+          #CIBW_ARCHS_LINUX: auto aarch64
           CIBW_SKIP: pp* *musllinux_aarch64
         # with:
         #   package-dir: .
