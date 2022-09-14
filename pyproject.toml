@@ -1,3 +1,18 @@
 [build-system]
 requires = ["setuptools>=45", "setuptools_scm[toml]>=6.2"]
 build-backend = "setuptools.build_meta"
+
+[metadata]
+name = "gensio"
+description = 'a framework for giving a consistent view of various stream (and packet) I/O types'
+author = 'Corey Minyard'
+author_email = 'cminyard@mvista.com'
+url = 'https://github.com/cminyard/gensio'
+readme = "README.rst"
+requires-python = ">=3.6"
+classifiers = [
+    "Programming Language :: Python :: 3",
+]
+dynamic = ["version"]
+
+[tool.setuptools_scm]

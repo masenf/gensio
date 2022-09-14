@@ -21,7 +21,6 @@ from distutils.spawn import spawn
 here = Path( __file__ ).parent.absolute()
 gensio_lib_output = here / "lib" / ".libs"
 gensio_swig_output = here / "swig" / "python" / ".libs"
-readme = long_description = (here / "README.rst").read_text()
 skip_shared_object_link_check_patch = here / "swig" / "python" / "patch--m4--ax_python_devel.m4.patch"
 
 
@@ -77,14 +76,6 @@ class build_ext(_build_ext.build_ext):
 
 
 setup(
-    name='gensio',
-    use_scm_version=True,
-    url='https://github.com/cminyard/gensio',
-    author='Corey Minyard',
-    author_email='cminyard@mvista.com>',
-    description='a framework for giving a consistent view of various stream (and packet) I/O types',
-    long_description=readme,
-    long_description_content_type="text/x-rst",
     py_modules=["gensio"],
     package_dir={'': "swig/python"},
     cmdclass={'build_ext': build_ext},
