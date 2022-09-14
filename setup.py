@@ -39,13 +39,18 @@ class build_ext(_build_ext.build_ext):
         configure = here / "configure"
         if not configure.exists():
             spawn([str(here / "reconf")])
+
+        config_args = []
+        if "linux" in sysconfig.get_config_var("SOABI"):
+            # normally this would be automatic... but explicitly override it
+            # to avoid the `-lpythonX.Y` flag, which isn't supported by manylinux
+            config_args.append("PYTHON_LIBS={}".format(sysconfig.get_config_var("LIBDIR")))
+
         spawn(
             [
                 str(configure),
                 "--with-python",
-                # normally this would be automatic... but explicitly override it
-                # to avoid the `-lpythonX.Y` flag, which isn't supported by manylinux
-                "PYTHON_LIBS={}".format(sysconfig.get_config_var("LIBDIR")),
+                *config_args,
             ],
         )
         try:
