@@ -32,6 +32,15 @@ class build_ext(_build_ext.build_ext):
     Re-use the package's existing build system, while bundling compiled
     libraries into the python package.
     """
+    
+    def reconf(self):
+        """rebuild autotools generated content."""
+        spawn(["libtoolize"])
+        spawn(["aclocal"])
+        spawn(["autoconf"])
+        spawn(["autoheader"])
+        spawn(["automake -a"])
+        
 
     def macos_rpath(self, lib):
         """
@@ -68,7 +77,7 @@ class build_ext(_build_ext.build_ext):
         os.environ["PYTHON_VERSION"] = sysconfig.get_python_version()
         configure = here / "configure"
         if not configure.exists():
-            spawn([str(here / "reconf")])
+            self.reconf()
 
         config_args = []
         platform_lib_globs = []
