@@ -81,7 +81,7 @@ setup(
     use_scm_version=True,
     url='https://github.com/cminyard/gensio',
     author='Corey Minyard',
-    author_email='cminyard@mvista.com>',
+    author_email='cminyard@mvista.com',
     description='a framework for giving a consistent view of various stream (and packet) I/O types',
     long_description=readme,
     long_description_content_type="text/x-rst",
