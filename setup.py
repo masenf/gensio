@@ -22,7 +22,6 @@ here = Path( __file__ ).parent.absolute()
 gensio_lib_output = here / "lib" / ".libs"
 gensio_swig_output = here / "swig" / "python" / ".libs"
 readme = long_description = (here / "README.rst").read_text()
-skip_shared_object_link_check_patch = here / "swig" / "python" / "patch--m4--ax_python_devel.m4.patch"
 
 
 class build_ext(_build_ext.build_ext):
@@ -32,19 +31,6 @@ class build_ext(_build_ext.build_ext):
     Re-use the package's existing build system, while bundling compiled
     libraries into the python package.
     """
-    def patch_rpath(self, lib):
-        copy_file(str(lib), self.build_lib)
-        # re-home the runpath to allow --user installation from sdist
-        spawn(
-            [
-                "patchelf",
-                "--set-rpath",
-                # this doesn't work with auditwheel, only sdist
-                #"{}:{}".format(sysconfig.get_path("platlib"), self.build_lib),
-                "$ORIGIN",  # XXX: security implications
-                str(Path(self.build_lib) / lib.name),
-            ]
-        )
 
     def run(self):
         if not self.extensions:
@@ -73,7 +59,7 @@ class build_ext(_build_ext.build_ext):
             for lib_dir in ext.depends or []:
                 for lib in lib_dir.glob("*.so*"):
                     # TODO: avoid copying symlinks
-                    self.patch_rpath(lib)
+                    copy_file(str(lib), self.build_lib)
 
 
 setup(
