@@ -18,17 +18,16 @@ jobs:
         run: brew install autoconf automake libtool && ln -s $(which glibtoolize) /usr/local/bin/libtoolize
         if: contains(matrix.os, 'macos')
 
-      #- name: Set up QEMU
-      #  if: runner.os == 'Linux'
-      #  uses: docker/setup-qemu-action@v2
-      #  with:
-      #    platforms: all
+      - name: Set up QEMU
+        if: runner.os == 'Linux'
+        uses: docker/setup-qemu-action@v2
+        with:
+          platforms: all
 
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.9.0
         env:
-          # temporarily disable aarch64 because it's slow
-          #CIBW_ARCHS_LINUX: auto aarch64
+          CIBW_ARCHS_LINUX: auto aarch64
           CIBW_SKIP: pp* *musllinux*
         # with:
         #   package-dir: .
