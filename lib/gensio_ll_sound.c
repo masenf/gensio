@@ -29,13 +29,22 @@
 #define IS_BIG_ENDIAN (__BYTE_ORDER == __BIG_ENDIAN)
 #define IS_LITTLE_ENDIAN (__BYTE_ORDER != __BIG_ENDIAN)
 
+#elif defined(__MACH__)
+#include <machine/endian.h>
+#include <libkern/OSByteOrder.h>
+#define bswap_16 OSSwapInt16
+#define bswap_32 OSSwapInt32
+#define bswap_64 OSSwapInt64
+#define IS_BIG_ENDIAN (BYTE_ORDER == BIG_ENDIAN)
+#define IS_LITTLE_ENDIAN (BYTE_ORDER != BIG_ENDIAN)
+
 #else /* BSD and others? */
 #include <sys/endian.h>
 #define bswap_16 bswap16
 #define bswap_32 bswap32
 #define bswap_64 bswap64
-#define IS_BIG_ENDIAN (BYTE_ORDER == BIG_ENDIAN)
-#define IS_LITTLE_ENDIAN (BYTE_ORDER != BIG_ENDIAN)
+#define IS_BIG_ENDIAN (__BYTE_ORDER == __BIG_ENDIAN)
+#define IS_LITTLE_ENDIAN (__BYTE_ORDER != __BIG_ENDIAN)
 #endif
 
 enum gensio_sound_ll_state {
