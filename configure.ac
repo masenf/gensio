@@ -833,6 +833,8 @@ AC_CHECK_FUNCS(isatty)
 AC_CHECK_FUNCS(strcasecmp)
 AC_CHECK_FUNCS(strncasecmp)
 AC_CHECK_FUNCS(prctl)
+AC_CHECK_FUNCS(setutxent)
+AC_CHECK_FUNCS(sigtimedwait)
 
 AC_CHECK_DECLS([SIGWINCH], [], [], [#include <signal.h>])
 
