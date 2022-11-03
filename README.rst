@@ -1,6 +1,19 @@
+=============
+gensio-binary
+=============
+
+This is a fork of `gensio <https://github.com/cminyard/gensio>`_ that builds
+binary python wheels for the PyPI package
+`gensio-binary <https://pypi.org/project/gensio-binary/>`_. 
+
+If you need a new or alternate version of `gensio-binary` published, please
+file `an issue in this fork <https://github.com/masenf/gensio/issues/new>`_, NOT
+THE UPSTREAM.
+
 ===========================
 gensio - General Stream I/O
 ===========================
+
 
 This is gensio (pronounced gen'-see-oh), a framework for giving a
 consistent view of various stream (and packet) I/O types.  You create
