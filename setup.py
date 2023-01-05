@@ -81,6 +81,9 @@ class build_ext(_build_ext.build_ext):
             )
             platform_lib_globs.append("*.so*")
         elif "darwin" in sysconfig.get_config_var("MULTIARCH"):
+            if sysconfig.get_platform().endswith("arm64"):
+                config_args.append("CFLAGS=-target arm64-apple-macos")
+                config_args.append("--host=aarch64-apple-darwin")
             platform_lib_globs.append("*.so*")
             platform_lib_globs.append("*.dylib*")
             lib_callbacks.append(self.macos_rpath)
