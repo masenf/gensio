@@ -90,6 +90,7 @@ class build_ext(_build_ext.build_ext):
         spawn(
             [
                 str(configure),
+                "--with-go=no",
                 "--with-python",
                 *config_args,
             ],
