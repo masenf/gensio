@@ -83,7 +83,7 @@ class build_ext(_build_ext.build_ext):
         elif "darwin" in sysconfig.get_config_var("MULTIARCH"):
             if sysconfig.get_platform().endswith("arm64"):
                 config_args.append("EXTRA_CFLAGS=-target aarch64-apple-darwin")
-                config_args.append("--host=aarch64-apple-darwin")
+                #config_args.append("--host=aarch64-apple-darwin")
                 config_args.append("--target=aarch64-apple-darwin")
             platform_lib_globs.append("*.so*")
             platform_lib_globs.append("*.dylib*")
