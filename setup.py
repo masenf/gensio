@@ -103,7 +103,7 @@ class build_ext(_build_ext.build_ext):
             spawn(["make", "-C", str(here / "swig" / "python")])
         except DistutilsExecError:
             # make the whole package
-            spawn(["make", "-C", str(here)])
+            spawn(["make", "-C", str(here), "V=1"])
         mkpath(self.build_lib)
         for ext in self.extensions:
             for lib_dir in ext.depends or []:
